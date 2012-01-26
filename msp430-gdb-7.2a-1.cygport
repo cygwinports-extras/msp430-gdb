@@ -1,0 +1,22 @@
+TOOLCHAIN_TARGET="msp430"
+ORIG_PN="gdb"
+inherit toolchain
+
+DESCRIPTION="GNU Debugger for MSP430 toolchain"
+HOMEPAGE="http://www.gnu.org/software/gdb/"
+SRC_URI="mirror://gnu/gdb/gdb-${PV}.tar.bz2"
+SRC_DIR="gdb-${PV%a}"
+
+PATCH_URI="mirror://sourceforge/mspgcc/${P}-20111205.patch"
+PATCH_URI+=" config-rpath.patch"
+
+CYGCONF_ARGS="--disable-werror --with-gdb-datadir=/usr/share/gdb/${TOOLCHAIN_TARGET}"
+MAKEOPTS+=" -j1"
+
+src_install() {
+	cd ${B}
+	cyginstall
+
+	# conflicts with native gdb
+	rm -fr ${D}/usr/{include,lib}/ ${D}/usr/share/{info,locale}/
+}

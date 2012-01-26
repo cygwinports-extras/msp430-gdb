@@ -1,0 +1,3 @@
+category: Devel
+requires: libexpat1 libiconv2 libintl8 libncursesw10 python zlib0
+sdesc: "GDB for MSP430 embedded toolchain"
