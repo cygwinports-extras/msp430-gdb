@@ -12,7 +12,10 @@ doing at the moment it crashed."
 HOMEPAGE="http://www.gnu.org/software/gdb/"
 SRC_URI="mirror://gnu/gdb/gdb-${VERSION%-*}.tar.bz2"
 SRC_DIR="gdb-${VERSION%a-*}"
-PATCH_URI="mirror://sourceforge/mspgcc/${NAME}-${VERSION}.patch"
+PATCH_URI="
+	mirror://sourceforge/mspgcc/${NAME}-${VERSION}.patch
+	20111205-Wimplicit-decls.patch
+"
 
 CYGCONF_ARGS="--disable-werror --with-gdb-datadir=/usr/share/gdb/${TOOLCHAIN_TARGET}"
 MAKEOPTS+=" -j1"

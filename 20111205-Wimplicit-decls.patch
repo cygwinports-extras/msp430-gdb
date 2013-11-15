@@ -1,0 +1,147 @@
+--- origsrc/gdb-7.2/libiberty/aclocal.m4	2008-04-18 10:14:11.000000000 -0500
++++ src/gdb-7.2/libiberty/aclocal.m4	2013-11-14 22:43:00.829557300 -0600
+@@ -14,6 +14,8 @@ AC_CACHE_CHECK([for working strncmp], ac
+ /* Test by Jim Wilson and Kaveh Ghazi.
+    Check whether strncmp reads past the end of its string parameters. */
+ #include <sys/types.h>
++#include <string.h>
++#include <stdlib.h>
+ 
+ #ifdef HAVE_FCNTL_H
+ #include <fcntl.h>
+@@ -146,7 +148,9 @@ if test $ac_cv_os_cray = yes; then
+ fi
+ 
+ AC_CACHE_CHECK(stack direction for C alloca, ac_cv_c_stack_direction,
+-[AC_TRY_RUN([find_stack_direction ()
++[AC_TRY_RUN([
++#include <stdlib.h>
++find_stack_direction ()
+ {
+   static char *addr = 0;
+   auto char dummy;
+--- origsrc/gdb-7.2/libiberty/configure	2010-06-03 11:54:11.000000000 -0500
++++ src/gdb-7.2/libiberty/configure	2013-11-14 22:43:15.407391100 -0600
+@@ -5979,6 +5979,7 @@ else
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
++#include <stdlib.h>
+ find_stack_direction ()
+ {
+   static char *addr = 0;
+@@ -6748,6 +6749,8 @@ else
+ /* Test by Jim Wilson and Kaveh Ghazi.
+    Check whether strncmp reads past the end of its string parameters. */
+ #include <sys/types.h>
++#include <string.h>
++#include <stdlib.h>
+ 
+ #ifdef HAVE_FCNTL_H
+ #include <fcntl.h>
+--- origsrc/gdb-7.2/readline/aclocal.m4	2006-05-05 13:26:12.000000000 -0500
++++ src/gdb-7.2/readline/aclocal.m4	2013-11-14 22:59:40.276722400 -0600
+@@ -771,6 +771,7 @@ AC_CACHE_VAL(bash_cv_func_sigsetjmp,
+ #include <sys/types.h>
+ #include <signal.h>
+ #include <setjmp.h>
++#include <stdlib.h>
+ 
+ main()
+ {
+@@ -817,6 +818,8 @@ AC_MSG_CHECKING(whether or not strcoll a
+ AC_CACHE_VAL(bash_cv_func_strcoll_broken,
+ [AC_TRY_RUN([
+ #include <stdio.h>
++#include <string.h>
++#include <stdlib.h>
+ #if defined (HAVE_LOCALE_H)
+ #include <locale.h>
+ #endif
+@@ -1286,6 +1289,7 @@ AC_MSG_CHECKING([if signal handlers must
+ AC_CACHE_VAL(bash_cv_must_reinstall_sighandlers,
+ [AC_TRY_RUN([
+ #include <signal.h>
++#include <stdlib.h>
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
+@@ -1838,6 +1842,7 @@ AC_CACHE_VAL(bash_cv_func_ctype_nonascii
+ #endif
+ #include <stdio.h>
+ #include <ctype.h>
++#include <stdlib.h>
+ 
+ main(c, v)
+ int	c;
+--- origsrc/gdb-7.2/readline/configure	2009-08-22 11:56:49.000000000 -0500
++++ src/gdb-7.2/readline/configure	2013-11-14 22:59:56.934675100 -0600
+@@ -4683,6 +4683,7 @@ else
+ /* end confdefs.h.  */
+ 
+ #include <signal.h>
++#include <stdlib.h>
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
+@@ -4766,6 +4767,7 @@ else
+ #include <sys/types.h>
+ #include <signal.h>
+ #include <setjmp.h>
++#include <stdlib.h>
+ 
+ main()
+ {
+@@ -4866,6 +4868,8 @@ else
+ /* end confdefs.h.  */
+ 
+ #include <stdio.h>
++#include <string.h>
++#include <stdlib.h>
+ #if defined (HAVE_LOCALE_H)
+ #include <locale.h>
+ #endif
+@@ -4939,6 +4943,7 @@ else
+ #endif
+ #include <stdio.h>
+ #include <ctype.h>
++#include <stdlib.h>
+ 
+ main(c, v)
+ int	c;
+--- origsrc/gdb-7.2/readline/display.c	2008-03-24 07:59:51.000000000 -0500
++++ src/gdb-7.2/readline/display.c	2013-11-14 23:13:11.109099300 -0600
+@@ -55,6 +55,7 @@
+ /* Some standard library routines. */
+ #include "readline.h"
+ #include "history.h"
++#include "rltty.h"
+ 
+ #include "rlprivate.h"
+ #include "xmalloc.h"
+--- origsrc/gdb-7.2/readline/rltty.c	2008-03-24 07:59:51.000000000 -0500
++++ src/gdb-7.2/readline/rltty.c	2013-11-14 23:01:03.455479900 -0600
+@@ -37,9 +37,7 @@
+ 
+ #include "rldefs.h"
+ 
+-#if defined (GWINSZ_IN_SYS_IOCTL)
+-#  include <sys/ioctl.h>
+-#endif /* GWINSZ_IN_SYS_IOCTL */
++#include <sys/ioctl.h>
+ 
+ #include "rltty.h"
+ #include "readline.h"
+--- origsrc/gdb-7.2/readline/terminal.c	2006-11-13 03:33:30.000000000 -0600
++++ src/gdb-7.2/readline/terminal.c	2013-11-14 23:18:47.019312300 -0600
+@@ -51,9 +51,7 @@
+ /* System-specific feature definitions and include files. */
+ #include "rldefs.h"
+ 
+-#if defined (GWINSZ_IN_SYS_IOCTL) && !defined (TIOCGWINSZ)
+-#  include <sys/ioctl.h>
+-#endif /* GWINSZ_IN_SYS_IOCTL && !TIOCGWINSZ */
++#include <sys/ioctl.h>
+ 
+ #ifdef __MSDOS__
+ # include <pc.h>
